@@ -7,7 +7,7 @@ const App = React.createClass({
         }
     },
     componentDidMount: function() {
-        $.get('http://localhost:3000/api/forms/1', (elements) => {
+        $.get('/', (elements) => {
             console.log(elements)
         });
     },
