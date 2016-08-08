@@ -65,6 +65,10 @@ const App = React.createClass({
         const isactive = this.state.todos.filter(ele => ele.done === true);
         this.setState({isactive})
     },
+    clearcompleted:function () {
+        const todos = this.state.todos.filter(ele => ele.done === false);
+        this.setState({todos})
+    },
     render: function () {
         return <div className="col-md-7 col-md-offset-4">
             <h1 className="col-md-offset-2">todos</h1>
@@ -75,7 +79,7 @@ const App = React.createClass({
                 onKeyDown={this.handlekeydown}
             />
             <Items todos={this.state.todos} isactive={this.state.isactive} onDelete={this.delete} onCheck={this.handlecheck}/>
-            <Footer todos={this.state.todos} onAll={this.getall} onActive={this.getactive} onCompleted={this.getcompleted}/>
+            <Footer todos={this.state.todos} onAll={this.getall} onActive={this.getactive} onCompleted={this.getcompleted} onClear={this.clearcompleted}/>
         </div>
     }
 });
@@ -94,7 +98,7 @@ const Items = React.createClass({
             const todo = ele.todo;
             const done = ele.done;
             return <div key={index} className="col-md-12">
-                <input className="col-md-1" type="checkbox" checked={done} onClick={this.check.bind(this,[ele,index])} />
+                <input className="col-md-1" type="checkbox" onClick={this.check.bind(this,[ele,index])} checked={done} />
                 <span className="col-md-5">{todo}</span>
                 <button className="btn btn-danger" onClick={this.remove.bind(this, index)}>X</button>
 
@@ -122,6 +126,9 @@ const Footer = React.createClass({
     completed:function () {
         this.props.onCompleted()
     },
+    clear:function () {
+        this.props.onClear()
+    },
     render: function () {
         const count = this.leftcount();
         return <div className="col-md-8">
@@ -130,7 +137,7 @@ const Footer = React.createClass({
             <button onClick={this.all}>All</button>
             <button onClick={this.active}>Active</button>
             <button onClick={this.completed}>Completed</button>
-            <button>clear completed</button>
+            <button onClick={this.clear}>clear completed</button>
 
         </div>
     }
