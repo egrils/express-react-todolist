@@ -20,18 +20,18 @@ const App = React.createClass({
             return;
         }
         const todos = this.state.todos;
-        let isactive = this.state.isactive;
         todos.push({
             todo:this.state.newtodo,
             done:false
         });
-        isactive = todos.map(ele=>ele);
+        const isactive = todos.map(ele=>ele);
         this.setState({todos,isactive})
     },
     delete: function (index) {
         const todos = this.state.todos;
         todos.splice(index, 1);
-        this.setState({todos})
+        const isactive = todos.map(ele=>ele);
+        this.setState({todos,isactive})
     },
     handlecheck:function (ele,index) {
         let flag = 0;
@@ -47,7 +47,8 @@ const App = React.createClass({
             flag ++;
             return checkitem;
         });
-        this.setState({todos})
+        const isactive = todos.map(ele=>ele);
+        this.setState({todos,isactive})
 
     },
     getall:function () {
@@ -64,7 +65,8 @@ const App = React.createClass({
     },
     clearcompleted:function () {
         const todos = this.state.todos.filter(ele => ele.done === false);
-        this.setState({todos})
+        const isactive = todos.map(ele=>ele);
+        this.setState({todos,isactive})
     },
     render: function () {
         return <div className="col-md-7 col-md-offset-4">
@@ -106,7 +108,7 @@ const Items = React.createClass({
                 <input className="col-md-1"
                        type="checkbox"
                        checked={done}
-                       onClick={this.check.bind(this,[ele,index])}/>
+                       onChange={this.check.bind(this,[ele,index])}/>
                 <span className="col-md-5">{todo}</span>
                 <button className="btn btn-danger"
                         onClick={this.remove.bind(this, index)}>X</button>
