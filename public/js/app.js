@@ -20,15 +20,12 @@ const App = React.createClass({
             return;
         }
         const todos = this.state.todos;
-        const isactive = this.state.isactive;
+        let isactive = this.state.isactive;
         todos.push({
             todo:this.state.newtodo,
             done:false
         });
-        isactive.push({
-            todo:this.state.newtodo,
-            done:false
-        });
+        isactive = todos.map(ele=>ele);
         this.setState({todos,isactive})
     },
     delete: function (index) {
@@ -49,7 +46,7 @@ const App = React.createClass({
             }
             flag ++;
             return checkitem;
-        })
+        });
         this.setState({todos})
 
     },
@@ -76,10 +73,18 @@ const App = React.createClass({
                 className="col-md-7"
                 placeholder="What needs to be done?"
                 onChange={this.change}
-                onKeyDown={this.handlekeydown}
-            />
-            <Items todos={this.state.todos} isactive={this.state.isactive} onDelete={this.delete} onCheck={this.handlecheck}/>
-            <Footer todos={this.state.todos} onAll={this.getall} onActive={this.getactive} onCompleted={this.getcompleted} onClear={this.clearcompleted}/>
+                onKeyDown={this.handlekeydown}/>
+            <Items
+                todos={this.state.todos}
+                isactive={this.state.isactive}
+                onDelete={this.delete}
+                onCheck={this.handlecheck}/>
+            <Footer
+                todos={this.state.todos}
+                onAll={this.getall}
+                onActive={this.getactive}
+                onCompleted={this.getcompleted}
+                onClear={this.clearcompleted}/>
         </div>
     }
 });
@@ -98,9 +103,13 @@ const Items = React.createClass({
             const todo = ele.todo;
             const done = ele.done;
             return <div key={index} className="col-md-12">
-                <input className="col-md-1" type="checkbox" onClick={this.check.bind(this,[ele,index])} checked={done} />
+                <input className="col-md-1"
+                       type="checkbox"
+                       checked={done}
+                       onClick={this.check.bind(this,[ele,index])}/>
                 <span className="col-md-5">{todo}</span>
-                <button className="btn btn-danger" onClick={this.remove.bind(this, index)}>X</button>
+                <button className="btn btn-danger"
+                        onClick={this.remove.bind(this, index)}>X</button>
 
             </div>
         });
