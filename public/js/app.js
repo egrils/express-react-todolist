@@ -3,8 +3,7 @@ const App = React.createClass({
         return {
             newtodo: '',
             todos: [],
-            active:[],
-            completed:[]
+            isactive:[]
         }
     },
     componentDidMount: function() {
@@ -21,11 +20,16 @@ const App = React.createClass({
             return;
         }
         const todos = this.state.todos;
+        const isactive = this.state.isactive;
         todos.push({
             todo:this.state.newtodo,
             done:false
         });
-        this.setState({todos})
+        isactive.push({
+            todo:this.state.newtodo,
+            done:false
+        });
+        this.setState({todos,isactive})
     },
     delete: function (index) {
         const todos = this.state.todos;
@@ -49,9 +53,17 @@ const App = React.createClass({
         this.setState({todos})
 
     },
+    getall:function () {
+        const isactive = this.state.todos;
+        this.setState({isactive})
+    },
     getactive:function () {
-        const active = this.state.todos.filter(ele => ele.done === false);
-        this.setState({active})
+        const isactive = this.state.todos.filter(ele => ele.done === false);
+        this.setState({isactive})
+    },
+    getcompleted:function () {
+        const isactive = this.state.todos.filter(ele => ele.done === true);
+        this.setState({isactive})
     },
     render: function () {
         return <div className="col-md-7 col-md-offset-4">
@@ -62,8 +74,8 @@ const App = React.createClass({
                 onChange={this.change}
                 onKeyDown={this.handlekeydown}
             />
-            <Items todos={this.state.todos} ischeck={this.state.ischeck} onDelete={this.delete} onCheck={this.handlecheck}/>
-            <Footer todos={this.state.todos} onActive={this.getactive}/>
+            <Items todos={this.state.todos} isactive={this.state.isactive} onDelete={this.delete} onCheck={this.handlecheck}/>
+            <Footer todos={this.state.todos} onAll={this.getall} onActive={this.getactive} onCompleted={this.getcompleted}/>
         </div>
     }
 });
@@ -78,10 +90,11 @@ const Items = React.createClass({
         this.props.onDelete(index);
     },
     render: function () {
-        let todos = this.props.todos.map((ele, index)=> {
+        let todos = this.props.isactive.map((ele, index)=> {
             const todo = ele.todo;
+            const done = ele.done;
             return <div key={index} className="col-md-12">
-                <input className="col-md-1" type="checkbox" onClick={this.check.bind(this,[ele,index])} />
+                <input className="col-md-1" type="checkbox" checked={done} onClick={this.check.bind(this,[ele,index])} />
                 <span className="col-md-5">{todo}</span>
                 <button className="btn btn-danger" onClick={this.remove.bind(this, index)}>X</button>
 
@@ -100,18 +113,24 @@ const Footer = React.createClass({
         const lefttodos = this.props.todos.filter(ele => ele.done === false);
         return lefttodos.length;
     },
+    all:function () {
+        this.props.onAll()
+    },
     active:function () {
         this.props.onActive()
     },
+    completed:function () {
+        this.props.onCompleted()
+    },
     render: function () {
         const count = this.leftcount();
-        return <div className="col-md-6">
-            <span>{count} items left</span>
+        return <div className="col-md-8">
+            <span className="col-md-3">{count} items left</span>
 
-            <button>All</button>
+            <button onClick={this.all}>All</button>
             <button onClick={this.active}>Active</button>
-            <button>Completed</button>
-            <button>clear</button>
+            <button onClick={this.completed}>Completed</button>
+            <button>clear completed</button>
 
         </div>
     }
